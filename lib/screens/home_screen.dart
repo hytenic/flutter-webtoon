@@ -15,6 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isRunning = false;
   int totalPromodoros = 0;
   late Timer timer;
+
   void onTick(Timer timer) {
     if (totalSeconds == 0) {
       setState(() {
@@ -47,6 +48,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void onResetPress() {
+    timer.cancel();
+    setState(() {
+      totalSeconds = twentyFiveMinutes;
+      totalPromodoros = 0;
+    });
+  }
+
   String format(int seconds) {
     var duration = Duration(seconds: seconds);
     return duration.toString().split(".").first.substring(2, 7);
@@ -72,18 +81,34 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Flexible(
-            flex: 3,
-            child: Center(
-              child: IconButton(
-                iconSize: 120,
-                color: Theme.of(context).cardColor,
-                onPressed: isRunning ? onPausePress : onStartPress,
-                icon: Icon(isRunning
-                    ? Icons.pause_circle_outline
-                    : Icons.play_circle_outline),
-              ),
-            ),
-          ),
+              flex: 3,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          iconSize: 120,
+                          color: Theme.of(context).cardColor,
+                          onPressed: isRunning ? onPausePress : onStartPress,
+                          icon: Icon(isRunning
+                              ? Icons.pause_circle_outline
+                              : Icons.play_circle_outline),
+                        ),
+                        IconButton(
+                          iconSize: 50,
+                          color: Theme.of(context).cardColor,
+                          onPressed: onResetPress,
+                          icon: Icon(isRunning ? null : Icons.restore),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              )),
           Flexible(
             flex: 1,
             child: Row(
